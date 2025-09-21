@@ -47,6 +47,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Kasi Lami custom colors
+        kasi: {
+          sunset: "hsl(var(--kasi-sunset))",
+          earth: "hsl(var(--kasi-earth))",
+          sky: "hsl(var(--kasi-sky))",
+          grass: "hsl(var(--kasi-grass))",
+          gold: "hsl(var(--kasi-gold))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,6 +70,15 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        'gradient-sunset': 'var(--gradient-sunset)',
+        'gradient-earth': 'var(--gradient-earth)', 
+        'gradient-community': 'var(--gradient-community)',
+      },
+      boxShadow: {
+        'warm': 'var(--shadow-warm)',
+        'soft': 'var(--shadow-soft)',
       },
       keyframes: {
         "accordion-down": {
