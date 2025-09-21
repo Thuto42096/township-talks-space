@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MapPin, Users, Heart, Plus, MessageSquare, Loader2, Search, ChevronDown } from "lucide-react";
+import { MapPin, Users, Heart, Plus, MessageSquare, Loader2, Search, ChevronDown, Flag } from "lucide-react";
 import { useKasis } from "@/hooks/useKasis";
 
 const Home = () => {
@@ -54,7 +54,7 @@ const Home = () => {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Connect with your local community. Share events, support businesses, and stay connected with your neighbors.
           </p>
-          <div className="flex items-center justify-center gap-8 text-muted-foreground mb-8">
+          <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground mb-8">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5" />
               <span>Community Driven</span>
@@ -62,6 +62,10 @@ const Home = () => {
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5" />
               <span>No Login Required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Flag className="w-5 h-5" />
+              <span>Proudly Mzanzi</span>
             </div>
           </div>
 
