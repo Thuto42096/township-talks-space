@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, MapPin, Clock, Loader2 } from "lucide-react";
 import { useComments, useCreateComment } from "@/hooks/usePosts";
 import { useRealtimeComments } from "@/hooks/useRealtime";
@@ -122,18 +123,19 @@ const PostCard = ({ post }: PostCardProps) => {
             
             {/* Add Comment Form */}
             <form onSubmit={handleSubmitComment} className="space-y-3 pt-3 border-t border-kasi-earth/20">
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="space-y-3">
                 <Input
                   placeholder="Your name"
                   value={commenterName}
                   onChange={(e) => setCommenterName(e.target.value)}
                   className="border-kasi-earth/30 focus:border-primary"
                 />
-                <Input
+                <Textarea
                   placeholder="Add a comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className="border-kasi-earth/30 focus:border-primary"
+                  className="border-kasi-earth/30 focus:border-primary min-h-[80px] resize-none"
+                  rows={3}
                 />
               </div>
               <Button
