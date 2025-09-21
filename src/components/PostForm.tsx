@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useKasis } from "@/hooks/useKasis";
 
 interface PostFormProps {
   section: string;
@@ -23,19 +24,28 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
   const [displayName, setDisplayName] = useState("");
   const [kasi, setKasi] = useState(kasiName ? kasiName.charAt(0).toUpperCase() + kasiName.slice(1) : "");
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const kasiOptions = [
-    "Soweto", "Alexandra", "Tembisa", "Katlehong", "Evaton", 
+  // Fetch kasis from Supabase
+  const { data: kasisData = [], isLoading: kasisLoading } = useKasis();
+
+  // Fallback to hardcoded list if API fails
+  const fallbackKasiOptions = [
+    "Soweto", "Alexandra", "Tembisa", "Katlehong", "Evaton",
     "Sebokeng", "Daveyton", "Diepsloot", "Mamelodi", "Lenasia",
-    "Khayelitsha", "Gugulethu", "Langa", "Nyanga", "Soshanguve", 
-    "Atteridgeville", "Vosloorus", "Thokoza", "Botshabelo", 
-    "Mdantsane", "KwaMashu", "Umlazi", "Chatsworth", "Phoenix", 
+    "Khayelitsha", "Gugulethu", "Langa", "Nyanga", "Soshanguve",
+    "Atteridgeville", "Vosloorus", "Thokoza", "Botshabelo",
+    "Mdantsane", "KwaMashu", "Umlazi", "Chatsworth", "Phoenix",
     "Verulam", "Other"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const kasiOptions = kasisData.length > 0
+    ? kasisData.map(k => k.name).concat(["Other"])
+    : fallbackKasiOptions;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!displayName.trim() || !kasi || !content.trim()) {
       toast({
         title: "Missing Information",
@@ -45,23 +55,26 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
       return;
     }
 
-    onSubmit({
-      displayName: displayName.trim(),
-      kasi,
-      content: content.trim(),
-      section,
-      timestamp: new Date()
-    });
+    setIsSubmitting(true);
 
-    // Clear form
-    setDisplayName("");
-    setKasi("");
-    setContent("");
-    
-    toast({
-      title: "Post Created!",
-      description: "Your post has been added to the community.",
-    });
+    try {
+      await onSubmit({
+        displayName: displayName.trim(),
+        kasi,
+        content: content.trim(),
+        section,
+        timestamp: new Date()
+      });
+
+      // Clear form only on success
+      setDisplayName("");
+      setKasi(kasiName ? kasiName.charAt(0).toUpperCase() + kasiName.slice(1) : "");
+      setContent("");
+    } catch (error) {
+      // Error handling is done in the mutation
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -119,11 +132,19 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
             />
           </div>
           
-          <Button 
-            type="submit" 
-            className="w-full bg-gradient-sunset hover:opacity-90 text-white shadow-warm"
+          <Button
+            type="submit"
+            disabled={isSubmitting || kasisLoading}
+            className="w-full bg-gradient-sunset hover:opacity-90 text-white shadow-warm disabled:opacity-50"
           >
-            Post to Community
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Posting...
+              </>
+            ) : (
+              'Post to Community'
+            )}
           </Button>
         </form>
       </CardContent>

@@ -1,8 +1,10 @@
-import { useState } from "react";
 import PostForm from "./PostForm";
-import PostCard, { Post, Comment } from "./PostCard";
+import PostCard from "./PostCard";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Loader2 } from "lucide-react";
+import { usePosts, useCreatePost } from "@/hooks/usePosts";
+import { useRealtimePosts } from "@/hooks/useRealtime";
+import { type Post } from "@/lib/api";
 
 interface ForumSectionProps {
   section: string;
@@ -13,7 +15,12 @@ interface ForumSectionProps {
 }
 
 const ForumSection = ({ section, title, description, icon, kasiName }: ForumSectionProps) => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  // Use React Query hooks for data fetching
+  const { data: posts = [], isLoading, error } = usePosts(kasiName, section);
+  const createPostMutation = useCreatePost();
+
+  // Enable real-time updates
+  useRealtimePosts(kasiName, section);
 
   const handleAddPost = (newPost: {
     displayName: string;
@@ -22,24 +29,13 @@ const ForumSection = ({ section, title, description, icon, kasiName }: ForumSect
     section: string;
     timestamp: Date;
   }) => {
-    const post: Post = {
-      id: Date.now().toString(),
-      ...newPost,
-      comments: []
-    };
-    setPosts([post, ...posts]);
-  };
-
-  const handleAddComment = (postId: string, newComment: Omit<Comment, 'id'>) => {
-    setPosts(posts.map(post => {
-      if (post.id === postId) {
-        return {
-          ...post,
-          comments: [...post.comments, { ...newComment, id: Date.now().toString() }]
-        };
-      }
-      return post;
-    }));
+    // Transform the data to match our API interface
+    createPostMutation.mutate({
+      display_name: newPost.displayName,
+      kasi: newPost.kasi,
+      content: newPost.content,
+      section: newPost.section,
+    });
   };
 
   return (
@@ -69,7 +65,31 @@ const ForumSection = ({ section, title, description, icon, kasiName }: ForumSect
 
         {/* Posts Feed */}
         <div className="space-y-6">
-          {posts.length === 0 ? (
+          {isLoading ? (
+            <Card className="shadow-soft border-kasi-earth/20">
+              <CardContent className="p-12 text-center">
+                <Loader2 className="w-16 h-16 text-muted-foreground mx-auto mb-4 animate-spin" />
+                <h3 className="text-xl font-semibold text-muted-foreground mb-2">
+                  Loading posts...
+                </h3>
+                <p className="text-muted-foreground">
+                  Fetching the latest community updates
+                </p>
+              </CardContent>
+            </Card>
+          ) : error ? (
+            <Card className="shadow-soft border-kasi-earth/20">
+              <CardContent className="p-12 text-center">
+                <MessageSquare className="w-16 h-16 text-destructive mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-destructive mb-2">
+                  Error loading posts
+                </h3>
+                <p className="text-muted-foreground">
+                  Please check your connection and try again
+                </p>
+              </CardContent>
+            </Card>
+          ) : posts.length === 0 ? (
             <Card className="shadow-soft border-kasi-earth/20">
               <CardContent className="p-12 text-center">
                 <MessageSquare className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -86,7 +106,6 @@ const ForumSection = ({ section, title, description, icon, kasiName }: ForumSect
               <PostCard
                 key={post.id}
                 post={post}
-                onAddComment={handleAddComment}
               />
             ))
           )}

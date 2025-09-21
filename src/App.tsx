@@ -11,6 +11,7 @@ import Businesses from "./pages/Businesses";
 import News from "./pages/News";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
+import SupabaseTestPage from "./pages/SupabaseTestPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/businesses" element={<Businesses />} />
           <Route path="/news" element={<News />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/test-supabase" element={<SupabaseTestPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

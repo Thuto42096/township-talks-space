@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Users, Heart, Plus, MessageSquare } from "lucide-react";
+import { MapPin, Users, Heart, Plus, MessageSquare, Loader2 } from "lucide-react";
+import { useKasis } from "@/hooks/useKasis";
 
 const Home = () => {
-  const kasis = [
+  // Fetch kasis from Supabase
+  const { data: kasisData = [], isLoading, error } = useKasis();
+
+  // Fallback data in case API fails
+  const fallbackKasis = [
     { name: "Soweto", description: "South Western Townships" },
     { name: "Alexandra", description: "Alex Township" },
     { name: "Tembisa", description: "Ekurhuleni Township" },
@@ -16,6 +21,9 @@ const Home = () => {
     { name: "Mamelodi", description: "Pretoria Township" },
     { name: "Lenasia", description: "South of Johannesburg" },
   ];
+
+  // Use API data if available, otherwise fallback
+  const kasis = kasisData.length > 0 ? kasisData : fallbackKasis;
 
   return (
     <div className="min-h-screen bg-gradient-earth">
@@ -42,6 +50,17 @@ const Home = () => {
 
         {/* Kasi Selection Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {isLoading ? (
+            <div className="col-span-full flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin mr-3" />
+              <span className="text-lg text-muted-foreground">Loading communities...</span>
+            </div>
+          ) : error ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-destructive mb-4">Failed to load communities</p>
+              <p className="text-muted-foreground">Using default list</p>
+            </div>
+          ) : null}
           {kasis.map((kasi) => (
             <Card key={kasi.name} className="shadow-warm border-kasi-earth/20 hover:shadow-xl transition-all duration-300 group cursor-pointer">
               <CardHeader className="pb-4">
@@ -67,11 +86,19 @@ const Home = () => {
         </div>
 
         {/* Add Kasi Button */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 space-y-4">
           <Button variant="outline" size="lg" className="shadow-soft border-kasi-earth/20">
             <Plus className="w-5 h-5 mr-2" />
             Your kasi not here? Add Kasi
           </Button>
+
+          <div>
+            <Link to="/test-supabase">
+              <Button variant="ghost" size="sm" className="text-muted-foreground">
+                Test Supabase Connection
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Community Guidelines */}
