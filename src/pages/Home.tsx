@@ -1,38 +1,20 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Building2, Newspaper, MessageSquare, ArrowRight, Users, Heart } from "lucide-react";
+import { MapPin, Users, Heart, Plus, MessageSquare } from "lucide-react";
 
 const Home = () => {
-  const sections = [
-    {
-      path: "/events",
-      title: "Events", 
-      description: "Discover and share community events happening in your kasi",
-      icon: <Calendar className="w-6 h-6 text-white" />,
-      color: "bg-kasi-gold"
-    },
-    {
-      path: "/businesses",
-      title: "Local Businesses",
-      description: "Support and promote small businesses in your neighborhood", 
-      icon: <Building2 className="w-6 h-6 text-white" />,
-      color: "bg-kasi-grass"
-    },
-    {
-      path: "/news",
-      title: "News",
-      description: "Stay updated with the latest local news and community updates",
-      icon: <Newspaper className="w-6 h-6 text-white" />,
-      color: "bg-kasi-sky"
-    },
-    {
-      path: "/chat",
-      title: "General Chat",
-      description: "Connect with your neighbors in our open community space",
-      icon: <MessageSquare className="w-6 h-6 text-white" />,
-      color: "bg-primary"
-    }
+  const kasis = [
+    { name: "Soweto", description: "South Western Townships" },
+    { name: "Alexandra", description: "Alex Township" },
+    { name: "Tembisa", description: "Ekurhuleni Township" },
+    { name: "Katlehong", description: "East Rand Township" },
+    { name: "Evaton", description: "Vaal Triangle Township" },
+    { name: "Sebokeng", description: "Sedibeng District" },
+    { name: "Daveyton", description: "Benoni Township" },
+    { name: "Diepsloot", description: "Johannesburg Township" },
+    { name: "Mamelodi", description: "Pretoria Township" },
+    { name: "Lenasia", description: "South of Johannesburg" },
   ];
 
   return (
@@ -44,7 +26,7 @@ const Home = () => {
             Welcome to Kasi Lami
           </h1>
           <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Your neighborhood's digital meeting place. Connect, share, and stay informed with your community.
+            Choose your kasi to connect with your local community. Share events, support businesses, and stay connected.
           </p>
           <div className="flex items-center justify-center gap-8 text-muted-foreground">
             <div className="flex items-center gap-2">
@@ -58,31 +40,38 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Sections Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {sections.map((section) => (
-            <Card key={section.path} className="shadow-warm border-kasi-earth/20 hover:shadow-xl transition-all duration-300 group">
+        {/* Kasi Selection Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {kasis.map((kasi) => (
+            <Card key={kasi.name} className="shadow-warm border-kasi-earth/20 hover:shadow-xl transition-all duration-300 group cursor-pointer">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 ${section.color} rounded-lg flex items-center justify-center`}>
-                    {section.icon}
+                  <div className="w-12 h-12 bg-kasi-gold rounded-lg flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-xl text-primary">{section.title}</CardTitle>
-                    <CardDescription className="mt-1">{section.description}</CardDescription>
+                    <CardTitle className="text-xl text-primary">{kasi.name}</CardTitle>
+                    <CardDescription className="mt-1">{kasi.description}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <Link to={section.path}>
+                <Link to={`/kasi/${kasi.name.toLowerCase()}`}>
                   <Button className="w-full group-hover:shadow-warm transition-all">
-                    Explore {section.title}
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    Enter {kasi.name}
                   </Button>
                 </Link>
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Add Kasi Button */}
+        <div className="text-center mb-12">
+          <Button variant="outline" size="lg" className="shadow-soft border-kasi-earth/20">
+            <Plus className="w-5 h-5 mr-2" />
+            Your kasi not here? Add Kasi
+          </Button>
         </div>
 
         {/* Community Guidelines */}

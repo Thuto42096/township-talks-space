@@ -9,9 +9,10 @@ interface ForumSectionProps {
   title: string;
   description: string;
   icon: React.ReactNode;
+  kasiName?: string;
 }
 
-const ForumSection = ({ section, title, description, icon }: ForumSectionProps) => {
+const ForumSection = ({ section, title, description, icon, kasiName }: ForumSectionProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   const handleAddPost = (newPost: {
@@ -52,7 +53,9 @@ const ForumSection = ({ section, title, description, icon }: ForumSectionProps) 
                 {icon}
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-primary">{title}</h1>
+                <h1 className="text-3xl font-bold text-primary">
+                  {kasiName ? `${kasiName.charAt(0).toUpperCase() + kasiName.slice(1)} - ${title}` : title}
+                </h1>
                 <p className="text-muted-foreground mt-1">{description}</p>
               </div>
             </div>
@@ -61,7 +64,7 @@ const ForumSection = ({ section, title, description, icon }: ForumSectionProps) 
 
         {/* Post Form */}
         <div className="mb-8">
-          <PostForm section={section} onSubmit={handleAddPost} />
+          <PostForm section={section} onSubmit={handleAddPost} kasiName={kasiName} />
         </div>
 
         {/* Posts Feed */}

@@ -1,8 +1,11 @@
+import { useParams } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ForumSection from "@/components/ForumSection";
 import { MessageSquare } from "lucide-react";
 
 const Chat = () => {
+  const { kasiName } = useParams();
+  
   return (
     <div>
       <Navigation />
@@ -11,6 +14,7 @@ const Chat = () => {
         title="General Chat"
         description="Connect with your neighbors and have casual conversations about daily life"
         icon={<MessageSquare className="w-6 h-6 text-white" />}
+        kasiName={kasiName}
       />
     </div>
   );

@@ -16,18 +16,21 @@ interface PostFormProps {
     section: string;
     timestamp: Date;
   }) => void;
+  kasiName?: string;
 }
 
-const PostForm = ({ section, onSubmit }: PostFormProps) => {
+const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
   const [displayName, setDisplayName] = useState("");
-  const [kasi, setKasi] = useState("");
+  const [kasi, setKasi] = useState(kasiName ? kasiName.charAt(0).toUpperCase() + kasiName.slice(1) : "");
   const [content, setContent] = useState("");
 
   const kasiOptions = [
-    "Alexandra", "Soweto", "Khayelitsha", "Gugulethu", "Langa", "Nyanga",
-    "Mamelodi", "Soshanguve", "Atteridgeville", "Tembisa", "Vosloorus",
-    "Thokoza", "Sebokeng", "Botshabelo", "Mdantsane", "KwaMashu",
-    "Umlazi", "Chatsworth", "Phoenix", "Verulam", "Other"
+    "Soweto", "Alexandra", "Tembisa", "Katlehong", "Evaton", 
+    "Sebokeng", "Daveyton", "Diepsloot", "Mamelodi", "Lenasia",
+    "Khayelitsha", "Gugulethu", "Langa", "Nyanga", "Soshanguve", 
+    "Atteridgeville", "Vosloorus", "Thokoza", "Botshabelo", 
+    "Mdantsane", "KwaMashu", "Umlazi", "Chatsworth", "Phoenix", 
+    "Verulam", "Other"
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,7 +93,7 @@ const PostForm = ({ section, onSubmit }: PostFormProps) => {
               </label>
               <Select value={kasi} onValueChange={setKasi}>
                 <SelectTrigger className="border-kasi-earth/30 focus:border-primary">
-                  <SelectValue placeholder="Select your neighborhood" />
+                  <SelectValue placeholder={kasiName ? `Posting in ${kasiName.charAt(0).toUpperCase() + kasiName.slice(1)}` : "Select your neighborhood"} />
                 </SelectTrigger>
                 <SelectContent>
                   {kasiOptions.map((kasiOption) => (
