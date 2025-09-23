@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useKasis } from "@/hooks/useKasis";
+import { formatKasiName } from "@/lib/api";
 
 interface PostFormProps {
   section: string;
@@ -22,7 +23,7 @@ interface PostFormProps {
 
 const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
   const [displayName, setDisplayName] = useState("");
-  const [kasi, setKasi] = useState(kasiName ? kasiName.charAt(0).toUpperCase() + kasiName.slice(1) : "");
+  const [kasi, setKasi] = useState(kasiName ? formatKasiName(kasiName) : "");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,7 +69,7 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
 
       // Clear form only on success
       setDisplayName("");
-      setKasi(kasiName ? kasiName.charAt(0).toUpperCase() + kasiName.slice(1) : "");
+      setKasi(kasiName ? formatKasiName(kasiName) : "");
       setContent("");
     } catch (error) {
       // Error handling is done in the mutation

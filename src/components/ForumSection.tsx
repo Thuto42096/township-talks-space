@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MessageSquare, Loader2 } from "lucide-react";
 import { usePosts, useCreatePost } from "@/hooks/usePosts";
 import { useRealtimePosts } from "@/hooks/useRealtime";
+import { formatKasiName } from "@/lib/api";
 import { type Post } from "@/lib/api";
 
 interface ForumSectionProps {
@@ -15,12 +16,15 @@ interface ForumSectionProps {
 }
 
 const ForumSection = ({ section, title, description, icon, kasiName }: ForumSectionProps) => {
+  // Format kasi name for consistent API calls
+  const formattedKasiName = kasiName ? formatKasiName(kasiName) : undefined;
+
   // Use React Query hooks for data fetching
-  const { data: posts = [], isLoading, error } = usePosts(kasiName, section);
+  const { data: posts = [], isLoading, error } = usePosts(formattedKasiName, section);
   const createPostMutation = useCreatePost();
 
   // Enable real-time updates
-  useRealtimePosts(kasiName, section);
+  useRealtimePosts(formattedKasiName, section);
 
   const handleAddPost = (newPost: {
     displayName: string;
@@ -60,7 +64,7 @@ const ForumSection = ({ section, title, description, icon, kasiName }: ForumSect
 
         {/* Post Form */}
         <div className="mb-8">
-          <PostForm section={section} onSubmit={handleAddPost} kasiName={kasiName} />
+          <PostForm section={section} onSubmit={handleAddPost} kasiName={formattedKasiName} />
         </div>
 
         {/* Posts Feed */}

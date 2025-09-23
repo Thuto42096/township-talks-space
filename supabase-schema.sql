@@ -77,6 +77,10 @@ ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can view kasis" ON kasis
     FOR SELECT USING (true);
 
+-- Anyone can create kasis
+CREATE POLICY "Anyone can create kasis" ON kasis
+    FOR INSERT WITH CHECK (true);
+
 -- Anyone can read posts
 CREATE POLICY "Anyone can view posts" ON posts
     FOR SELECT USING (true);

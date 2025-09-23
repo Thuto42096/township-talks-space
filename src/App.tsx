@@ -12,6 +12,7 @@ import News from "./pages/News";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import SupabaseTestPage from "./pages/SupabaseTestPage";
+import AddKasi from "./pages/AddKasi";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/news" element={<News />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/test-supabase" element={<SupabaseTestPage />} />
+          <Route path="/add-kasi" element={<AddKasi />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,5 +1,10 @@
 import { supabase } from './supabase'
 
+// Utility function to format kasi names consistently
+export const formatKasiName = (kasiName: string): string => {
+  return kasiName.charAt(0).toUpperCase() + kasiName.slice(1).toLowerCase()
+}
+
 // Types matching our database schema
 export interface Post {
   id: string
@@ -44,7 +49,9 @@ export const postsApi = {
       .order('created_at', { ascending: false })
 
     if (kasi) {
-      query = query.eq('kasi', kasi)
+      // Format kasi name to match database format
+      const formattedKasi = formatKasiName(kasi)
+      query = query.eq('kasi', formattedKasi)
     }
 
     if (section) {
@@ -163,6 +170,11 @@ export const kasisApi = {
 
   // Get a single kasi by name
   async getKasi(name: string): Promise<Kasi | null> {
+    if (!supabase) {
+      console.warn('Supabase not available, cannot fetch kasi')
+      return null
+    }
+
     const { data, error } = await supabase
       .from('kasis')
       .select('*')
@@ -175,6 +187,27 @@ export const kasisApi = {
     }
 
     return data
+  },
+
+  // Create a new kasi
+  async createKasi(kasi: Omit<Kasi, 'id' | 'created_at'>): Promise<Kasi> {
+    if (!supabase) {
+      console.warn('Supabase not available, cannot create kasi')
+      throw new Error('Database not available')
+    }
+
+    const { data, error } = await supabase
+      .from('kasis')
+      .insert([kasi])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error creating kasi:', error)
+      throw error
+    }
+
+    return data
   }
 }
 
@@ -182,15 +215,23 @@ export const kasisApi = {
 export const subscriptions = {
   // Subscribe to new posts
   subscribeToPosts(callback: (post: Post) => void, kasi?: string, section?: string) {
+    if (!supabase) {
+      console.warn('Supabase not available, real-time subscriptions disabled')
+      return () => {} // Return empty unsubscribe function
+    }
+
+    // Format kasi name for consistent filtering
+    const formattedKasi = kasi ? formatKasiName(kasi) : undefined
+
     let channel = supabase
       .channel('posts')
-      .on('postgres_changes', 
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
+      .on('postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
           table: 'posts',
-          filter: kasi ? `kasi=eq.${kasi}` : undefined
-        }, 
+          filter: formattedKasi ? `kasi=eq.${formattedKasi}` : undefined
+        },
         (payload) => {
           const newPost = payload.new as Post
           if (!section || newPost.section === section) {

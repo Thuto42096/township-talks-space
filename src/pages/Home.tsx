@@ -165,10 +165,12 @@ const Home = () => {
 
           {/* Add Kasi Button */}
           <div className="text-center mb-8">
-            <Button variant="outline" size="lg" className="shadow-soft border-kasi-earth/20">
-              <Plus className="w-5 h-5 mr-2" />
-              Your kasi not here? Add Kasi
-            </Button>
+            <Link to="/add-kasi">
+              <Button variant="outline" size="lg" className="shadow-soft border-kasi-earth/20">
+                <Plus className="w-5 h-5 mr-2" />
+                Your kasi not here? Add Kasi
+              </Button>
+            </Link>
           </div>
         </div>
 
