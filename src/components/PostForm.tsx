@@ -44,13 +44,37 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
     ? kasisData.map(k => k.name).concat(["Other"])
     : fallbackKasiOptions;
 
+  const MAX_NAME_LENGTH = 50;
+  const MAX_CONTENT_LENGTH = 2000;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!displayName.trim() || !kasi || !content.trim()) {
+    const trimmedName = displayName.trim();
+    const trimmedContent = content.trim();
+
+    if (!trimmedName || !kasi || !trimmedContent) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields before posting.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (trimmedName.length > MAX_NAME_LENGTH) {
+      toast({
+        title: "Name Too Long",
+        description: `Display name must be ${MAX_NAME_LENGTH} characters or less.`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (trimmedContent.length > MAX_CONTENT_LENGTH) {
+      toast({
+        title: "Message Too Long",
+        description: `Your message must be ${MAX_CONTENT_LENGTH} characters or less.`,
         variant: "destructive"
       });
       return;
@@ -98,6 +122,7 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
                 placeholder="What should we call you?"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
                 className="border-kasi-earth/30 focus:border-primary"
               />
             </div>
@@ -129,8 +154,12 @@ const PostForm = ({ section, onSubmit, kasiName }: PostFormProps) => {
               placeholder={`What's happening in ${section}?`}
               value={content}
               onChange={(e) => setContent(e.target.value)}
+              maxLength={MAX_CONTENT_LENGTH}
               className="min-h-[100px] border-kasi-earth/30 focus:border-primary resize-none"
             />
+            <p className="text-xs text-muted-foreground mt-1 text-right">
+              {content.length}/{MAX_CONTENT_LENGTH}
+            </p>
           </div>
           
           <Button

@@ -14,13 +14,37 @@ const AddKasi = () => {
   const navigate = useNavigate();
   const createKasiMutation = useCreateKasi();
 
+  const MAX_KASI_NAME_LENGTH = 100;
+  const MAX_DESCRIPTION_LENGTH = 500;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!kasiName.trim() || !kasiDescription.trim()) {
+    const trimmedName = kasiName.trim();
+    const trimmedDesc = kasiDescription.trim();
+
+    if (!trimmedName || !trimmedDesc) {
       toast({
         title: "Missing Information",
         description: "Please fill in both the kasi name and description.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (trimmedName.length > MAX_KASI_NAME_LENGTH) {
+      toast({
+        title: "Name Too Long",
+        description: `Kasi name must be ${MAX_KASI_NAME_LENGTH} characters or less.`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (trimmedDesc.length > MAX_DESCRIPTION_LENGTH) {
+      toast({
+        title: "Description Too Long",
+        description: `Description must be ${MAX_DESCRIPTION_LENGTH} characters or less.`,
         variant: "destructive"
       });
       return;
@@ -90,6 +114,7 @@ const AddKasi = () => {
                   placeholder="e.g., Soweto, Alexandra, Tembisa..."
                   value={kasiName}
                   onChange={(e) => setKasiName(e.target.value)}
+                  maxLength={MAX_KASI_NAME_LENGTH}
                   className="border-kasi-earth/30 focus:border-primary"
                   disabled={createKasiMutation.isPending}
                 />
@@ -104,6 +129,7 @@ const AddKasi = () => {
                   placeholder="Brief description of your kasi (e.g., location, what makes it special...)"
                   value={kasiDescription}
                   onChange={(e) => setKasiDescription(e.target.value)}
+                  maxLength={MAX_DESCRIPTION_LENGTH}
                   className="border-kasi-earth/30 focus:border-primary min-h-[100px] resize-none"
                   rows={4}
                   disabled={createKasiMutation.isPending}

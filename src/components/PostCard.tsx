@@ -24,17 +24,27 @@ const PostCard = ({ post }: PostCardProps) => {
   // Enable real-time updates for comments when comments are shown
   useRealtimeComments(showComments ? post.id : '');
 
+  const MAX_NAME_LENGTH = 50;
+  const MAX_COMMENT_LENGTH = 1000;
+
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!commenterName.trim() || !commentText.trim()) {
+    const trimmedName = commenterName.trim();
+    const trimmedText = commentText.trim();
+
+    if (!trimmedName || !trimmedText) {
+      return;
+    }
+
+    if (trimmedName.length > MAX_NAME_LENGTH || trimmedText.length > MAX_COMMENT_LENGTH) {
       return;
     }
 
     createCommentMutation.mutate({
       post_id: post.id,
-      display_name: commenterName.trim(),
-      content: commentText.trim(),
+      display_name: trimmedName,
+      content: trimmedText,
     });
 
     setCommentText("");
@@ -128,12 +138,14 @@ const PostCard = ({ post }: PostCardProps) => {
                   placeholder="Your name"
                   value={commenterName}
                   onChange={(e) => setCommenterName(e.target.value)}
+                  maxLength={MAX_NAME_LENGTH}
                   className="border-kasi-earth/30 focus:border-primary"
                 />
                 <Textarea
                   placeholder="Add a comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
+                  maxLength={MAX_COMMENT_LENGTH}
                   className="border-kasi-earth/30 focus:border-primary min-h-[80px] resize-none"
                   rows={3}
                 />

@@ -174,15 +174,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Test Supabase Link */}
-        <div className="text-center mb-12">
-          <Link to="/test-supabase">
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-              Test Supabase Connection
-            </Button>
-          </Link>
-        </div>
-
         {/* Community Guidelines */}
         <Card className="shadow-soft border-kasi-earth/20 bg-gradient-to-r from-secondary/30 to-secondary/10">
           <CardHeader>
