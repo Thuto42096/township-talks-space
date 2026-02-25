@@ -40,19 +40,17 @@ Your Kasi Lami project has been successfully integrated with Supabase as the bac
 - Live updates when new posts or comments are added
 - Automatic cache invalidation for fresh data
 
-### 7. **Testing & Validation**
-- `src/components/SupabaseTest.tsx`: Connection testing component
-- `src/pages/SupabaseTestPage.tsx`: Comprehensive test page
-- Build validation completed successfully
-- Test route available at `/test-supabase`
+### 7. **Production Readiness Basics**
+- Vercel-friendly SPA routing (see `vercel.json`)
+- Lint + typecheck scripts available (`npm run ci`)
 
 ## 🚀 Next Steps
 
 ### Immediate Setup Required:
 1. **Create Supabase Project**: Sign up at [supabase.com](https://supabase.com)
-2. **Update Environment Variables**: Add your Supabase URL and API key to `.env.local`
+2. **Update Environment Variables**: Add your Supabase URL and API key to `.env.local` (or `.env`) and configure them in Vercel
 3. **Run Database Schema**: Execute `supabase-schema.sql` in Supabase SQL Editor
-4. **Test Connection**: Visit `/test-supabase` to verify everything works
+4. **Smoke Test**: Run the app and verify you can load kasis, create a post, and add a comment
 
 ### Optional Enhancements:
 - **User Authentication**: Add Supabase Auth for user accounts
@@ -72,13 +70,12 @@ src/
 │   ├── usePosts.ts          # Posts and comments hooks
 │   ├── useKasis.ts          # Kasis data hooks
 │   └── useRealtime.ts       # Real-time subscription hooks
-├── components/
-│   └── SupabaseTest.tsx     # Connection testing component
-└── pages/
-    └── SupabaseTestPage.tsx # Test page for setup validation
+└── components/
+    ├── PostForm.tsx
+    └── PostCard.tsx
 
 Root files:
-├── .env.local               # Environment variables (update required)
+├── .env.local               # Environment variables (local only, do not commit)
 ├── supabase-schema.sql      # Database schema
 ├── SUPABASE_SETUP.md        # Detailed setup guide
 └── INTEGRATION_SUMMARY.md   # This summary
@@ -106,8 +103,8 @@ npm run dev
 # Build for production
 npm run build
 
-# Test Supabase connection
-# Visit http://localhost:8080/test-supabase
+# Smoke test
+# Run the app and verify you can load kasis, create a post, and add a comment
 ```
 
 ## 📖 Documentation
@@ -120,8 +117,8 @@ Your Kasi Lami community platform is now powered by a robust, scalable Supabase 
 
 ---
 
-**Need Help?** 
-- Check the test page at `/test-supabase`
+**Need Help?**
+- Verify `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are set (and configured in Vercel)
 - Review the setup guide in `SUPABASE_SETUP.md`
 - Check browser console for error messages
 - Visit [Supabase Documentation](https://supabase.com/docs)

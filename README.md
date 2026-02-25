@@ -1,73 +1,45 @@
-# Welcome to your Lovable project
+# Kasi Lami
 
-## Project info
+Kasi Lami is a lightweight community forum for South African townships (“kasis”) — share **Events**, **Businesses**, **News**, and **Chat**. No login required.
 
-**URL**: https://lovable.dev/projects/08fc4b6d-9af7-461e-902f-b69f84657705
+### Live
+https://kasi-lami.vercel.app/
 
-## How can I edit this code?
+## Tech Stack
+- React + TypeScript + Vite
+- Tailwind CSS + shadcn-ui
+- Supabase (Postgres + Realtime)
+- React Query + React Router
 
-There are several ways of editing your application.
+## Local Development
 
-**Use Lovable**
+1) Install deps
+- `npm ci`
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/08fc4b6d-9af7-461e-902f-b69f84657705) and start prompting.
+2) Configure environment variables (do **not** commit these)
 
-Changes made via Lovable will be committed automatically to this repo.
+Create `.env.local` (recommended) with:
+- `VITE_SUPABASE_URL=...`
+- `VITE_SUPABASE_ANON_KEY=...`
 
-**Use your preferred IDE**
+3) Run dev server
+- `npm run dev`
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Production (Vercel)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Vercel does **not** use your local `.env` file. Add these in **Vercel → Project → Settings → Environment Variables**:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
-Follow these steps:
+Only the **anon/public** key is allowed in the browser.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Supabase Database
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1) Run `supabase-schema.sql` in Supabase SQL Editor (creates tables, indexes, and public RLS policies).
+2) (Recommended) Run `supabase-hardening.sql` to add production constraints (length limits, non-empty checks).
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/08fc4b6d-9af7-461e-902f-b69f84657705) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Useful Scripts
+- `npm run lint`
+- `npm run typecheck`
+- `npm run build`
+- `npm run ci` (lint + typecheck + build)

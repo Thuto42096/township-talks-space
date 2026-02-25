@@ -29,13 +29,21 @@ This guide will help you connect your Kasi Lami project to a Supabase backend.
 
 ## Step 3: Configure Environment Variables
 
-1. In your project root, update the `.env.local` file:
+1. For local development, create/update `.env.local` (recommended) or `.env` in the project root:
    ```env
    VITE_SUPABASE_URL=https://your-project-id.supabase.co
    VITE_SUPABASE_ANON_KEY=your-anon-key-here
    ```
 
 2. Replace the placeholder values with your actual Supabase credentials
+
+### Vercel (Production)
+
+Vercel will not read your local `.env` file. Add the same variables in:
+**Vercel 71 Project 71 Settings 71 Environment Variables**
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
 ## Step 4: Set Up the Database Schema
 
@@ -44,6 +52,10 @@ This guide will help you connect your Kasi Lami project to a Supabase backend.
 3. Copy and paste the entire contents of `supabase-schema.sql` from your project root
 4. Click "Run" to execute the SQL
 5. You should see success messages for each table creation
+
+### Recommended: Production Constraints
+
+After the base schema is running, execute `supabase-hardening.sql` to add length limits and non-empty constraints that match the UI.
 
 ## Step 5: Enable Real-time (Optional but Recommended)
 
@@ -80,8 +92,9 @@ This guide will help you connect your Kasi Lami project to a Supabase backend.
 ### Common Issues:
 
 1. **"Missing Supabase environment variables" error**:
-   - Check that your `.env.local` file has the correct variable names
+   - Check that your `.env.local` (or `.env`) file has the correct variable names
    - Restart your development server after updating environment variables
+   - On Vercel, verify the Environment Variables are set for **Production** (and **Preview** if needed)
 
 2. **Database connection errors**:
    - Verify your Project URL and API key are correct

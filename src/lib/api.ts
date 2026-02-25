@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { getSupabaseClient, supabase } from './supabase'
 
 // Utility function to format kasi names consistently
 export const formatKasiName = (kasiName: string): string => {
@@ -35,7 +35,9 @@ export interface Kasi {
 export const postsApi = {
   // Get all posts or filter by kasi/section
   async getPosts(kasi?: string, section?: string): Promise<Post[]> {
-    let query = supabase
+    const sb = getSupabaseClient()
+
+    let query = sb
       .from('posts')
       .select(`
         id,
@@ -74,7 +76,9 @@ export const postsApi = {
 
   // Create a new post
   async createPost(post: Omit<Post, 'id' | 'created_at' | 'comment_count'>): Promise<Post> {
-    const { data, error } = await supabase
+    const sb = getSupabaseClient()
+
+    const { data, error } = await sb
       .from('posts')
       .insert([post])
       .select()
@@ -90,7 +94,9 @@ export const postsApi = {
 
   // Get a single post by ID
   async getPost(id: string): Promise<Post | null> {
-    const { data, error } = await supabase
+    const sb = getSupabaseClient()
+
+    const { data, error } = await sb
       .from('posts')
       .select(`
         id,
@@ -120,7 +126,9 @@ export const postsApi = {
 export const commentsApi = {
   // Get comments for a specific post
   async getComments(postId: string): Promise<Comment[]> {
-    const { data, error } = await supabase
+    const sb = getSupabaseClient()
+
+    const { data, error } = await sb
       .from('comments')
       .select('*')
       .eq('post_id', postId)
@@ -136,7 +144,9 @@ export const commentsApi = {
 
   // Create a new comment
   async createComment(comment: Omit<Comment, 'id' | 'created_at'>): Promise<Comment> {
-    const { data, error } = await supabase
+    const sb = getSupabaseClient()
+
+    const { data, error } = await sb
       .from('comments')
       .insert([comment])
       .select()
@@ -155,7 +165,9 @@ export const commentsApi = {
 export const kasisApi = {
   // Get all kasis
   async getKasis(): Promise<Kasi[]> {
-    const { data, error } = await supabase
+    const sb = getSupabaseClient()
+
+    const { data, error } = await sb
       .from('kasis')
       .select('*')
       .order('name')
@@ -223,8 +235,10 @@ export const subscriptions = {
     // Format kasi name for consistent filtering
     const formattedKasi = kasi ? formatKasiName(kasi) : undefined
 
-    let channel = supabase
-      .channel('posts')
+    const channelName = `posts:${formattedKasi ?? 'all'}:${section ?? 'all'}`
+
+    const channel = supabase
+      .channel(channelName)
       .on('postgres_changes',
         {
           event: 'INSERT',
@@ -248,6 +262,11 @@ export const subscriptions = {
 
   // Subscribe to new comments for a specific post
   subscribeToComments(postId: string, callback: (comment: Comment) => void) {
+    if (!supabase) {
+      console.warn('Supabase not available, real-time subscriptions disabled')
+      return () => {}
+    }
+
     const channel = supabase
       .channel(`comments-${postId}`)
       .on('postgres_changes', 
